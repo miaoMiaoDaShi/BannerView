@@ -1,10 +1,10 @@
 package com.xxp.bannerdemo;
 
 import android.app.Activity;
-import android.graphics.Color;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.View;
+import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.xxp.bannerdemo.banner.BannerView;
@@ -30,11 +30,12 @@ public class MainActivity extends AppCompatActivity {
 
             //获取Banner中的View 你就可以设置图片拉
             @Override
-            public void setBannerViews(List<View> views) {
+            public void setBannerViews(List<ImageView> views) {
+                Log.e("图片", "setBannerViews: "+views.size() );
                 //实例
-                views.get(0).setBackgroundColor(Color.BLUE);
-                views.get(1).setBackgroundColor(Color.CYAN);
-                views.get(2).setBackgroundColor(Color.YELLOW);
+                views.get(0).setImageResource(R.mipmap.banner_1);
+                views.get(1).setImageResource(R.mipmap.banner_2);
+                views.get(2).setImageResource(R.mipmap.banner_3);
             }
         });
         //设置点击事件

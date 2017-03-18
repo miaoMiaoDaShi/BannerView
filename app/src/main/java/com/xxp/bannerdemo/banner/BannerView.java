@@ -36,7 +36,7 @@ public class BannerView extends RelativeLayout {
     private final String TAG = "BannerView";
     private ViewPager viewPager;
     //轮播图的数量
-    private final int viewPagerCount = 5;
+    private int viewPagerCount ;
     //指示器的小圆点数组
     private Point[] mPointArray;
     //开始自动滑动
@@ -47,7 +47,7 @@ public class BannerView extends RelativeLayout {
     private final int DEFAULT_EMPTY_COLOR = Color.CYAN;
     private final int DEFAULT_FULL_COLOR = Color.WHITE;
     private final int DEFAULT_SCROLL_TIME = 5000;
-
+    private final int DEFAULT_BANNER_COUNT = 5;
     private final int DEFAULT_SCROLL_DURATION = 2000;
 
     //轮播的Duration
@@ -64,7 +64,7 @@ public class BannerView extends RelativeLayout {
 
     //停止制动滑动
     private boolean stop = false;
-    private List<View> bannerView;
+    private List<ImageView> bannerView;
     private LinearLayout pointGroup;
     private Activity mActivity;
 
@@ -93,6 +93,7 @@ public class BannerView extends RelativeLayout {
         Log.e(TAG, "BannerView: " + context);
         //解析自定义的属性
         TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.BannerView);
+        viewPagerCount = typedArray.getInt(R.styleable.BannerView_banner_count,DEFAULT_BANNER_COUNT);
         //空点
         point_empty_color = typedArray.getColor(R.styleable.BannerView_point_empty_color, DEFAULT_EMPTY_COLOR);
         //满点
@@ -103,6 +104,10 @@ public class BannerView extends RelativeLayout {
         loading_image = typedArray.getInt(R.styleable.BannerView_loading_image, R.drawable.bg_loading);
             //轮播Duration
         scroll_duration = typedArray.getInt(R.styleable.BannerView_scroll_speed,DEFAULT_SCROLL_DURATION);
+    }
+
+    public int getViewPagerCount() {
+        return viewPagerCount;
     }
 
     //自动轮播
@@ -142,9 +147,6 @@ public class BannerView extends RelativeLayout {
 
     public void setupIbanner(IBannerPrepare iBannerPrepare) {
         this.mIBannerPrepare = iBannerPrepare;
-    }
-
-    private void steupInitIbanner() {
         if (mIBannerPrepare != null) {
             //得到Activity
             mActivity = mIBannerPrepare.getActivity();
@@ -255,7 +257,6 @@ public class BannerView extends RelativeLayout {
     protected void onFinishInflate() {
         super.onFinishInflate();
         initView();
-        steupInitIbanner();
         autoScroll();
     }
 

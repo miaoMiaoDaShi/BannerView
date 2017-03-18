@@ -5,6 +5,15 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.xxp.bannerdemo.MainActivity">
-   <include layout="@layout/banner"/>
+   <com.xxp.bannerdemo.banner.BannerView
+       android:id="@+id/vp_banner"
+       android:layout_width="368dp"
+       android:layout_height="150dp"
+       app:point_empty_color="@android:color/darker_gray"
+       app:point_full_color="@color/colorPrimary"
+       app:banner_count="3"
+       tools:layout_editor_absoluteY="0dp"
+       tools:layout_editor_absoluteX="8dp">
+   </com.xxp.bannerdemo.banner.BannerView>
 
 </android.support.constraint.ConstraintLayout>

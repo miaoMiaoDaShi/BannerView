@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <declare-styleable name="BannerView">
+        <!--图片的数量-->
+        <attr name="banner_count" format="integer"/>
         <!--指示器 颜色  当前-->
         <attr name="point_full_color" format="color"/>
         <!--指示器 颜色  为空-->
