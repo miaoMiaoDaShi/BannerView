@@ -31,10 +31,15 @@ import java.util.TimerTask;
  * Created by 钟大爷 on 2017/2/23.
  */
 
-public class BannerView extends RelativeLayout implements View.OnClickListener {
+
+/**
+ * Created by 钟大爷 on 2017/2/23.
+ */
+
+public class BannerView extends RelativeLayout {
 
     private final String TAG = "BannerView";
-    private BannerViewPager viewPager;
+    private ViewPager viewPager;
     //轮播图的数量
     private int viewPagerCount ;
     //指示器的小圆点数组
@@ -64,7 +69,7 @@ public class BannerView extends RelativeLayout implements View.OnClickListener {
 
     //停止制动滑动
     private boolean stop = false;
-    private List<View> bannerView;
+    private List<ImageView> bannerView;
     private LinearLayout pointGroup;
     private Activity mActivity;
 
@@ -83,7 +88,6 @@ public class BannerView extends RelativeLayout implements View.OnClickListener {
             }
         }
     };
-    private int mPosition;
 
     public BannerView(Context context) {
         this(context, null);
@@ -103,7 +107,7 @@ public class BannerView extends RelativeLayout implements View.OnClickListener {
         scroll_time = typedArray.getInt(R.styleable.BannerView_auto_scroll_time, DEFAULT_SCROLL_TIME);
         //加载的图片
         loading_image = typedArray.getInt(R.styleable.BannerView_loading_image, R.drawable.bg_loading);
-            //轮播Duration
+        //轮播Duration
         scroll_duration = typedArray.getInt(R.styleable.BannerView_scroll_speed,DEFAULT_SCROLL_DURATION);
     }
 
@@ -155,13 +159,8 @@ public class BannerView extends RelativeLayout implements View.OnClickListener {
             mActivity
                     .getApplication()
                     .registerActivityLifecycleCallbacks(lifecycleCallbacks);
-
-            List<ImageView> images = new ArrayList<>();
             //外传bannerViews
-            for (View view:bannerView) {
-                images.add((ImageView) view);
-            }
-            mIBannerPrepare.setBannerViews(images);
+            mIBannerPrepare.setBannerViews(bannerView);
         }
     }
 
@@ -181,14 +180,23 @@ public class BannerView extends RelativeLayout implements View.OnClickListener {
 
     //往里面加图片,并设置事件监听
     private void initViewPager() {
-        viewPager = new BannerViewPager(getContext());
+        viewPager = new ViewPager(getContext());
         bannerView = new ArrayList<>();
         for (int i = 0; i < viewPagerCount; i++) {
             ImageView image = new ImageView(getContext());
             image.setImageResource(loading_image);
             image.setScaleType(ImageView.ScaleType.FIT_XY);
-            image.setClickable(false);
             bannerView.add(image);
+            //设置点击事件监听
+            final int position = i;
+            image.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (mOnClickListener != null) {
+                        mOnClickListener.onClick(position);
+                    }
+                }
+            });
         }
 
         viewPager.setAdapter(new BannerAdapter(bannerView));
@@ -201,8 +209,6 @@ public class BannerView extends RelativeLayout implements View.OnClickListener {
             @Override
             public void onPageSelected(int position) {
                 Log.e(TAG, "onPageSelected: ");
-                mPosition = position;
-
                 int newPosition = position % viewPagerCount;
                 for (int i = 0; i < viewPagerCount; i++) {
                     mPointArray[newPosition].setShow(true);
@@ -211,7 +217,6 @@ public class BannerView extends RelativeLayout implements View.OnClickListener {
                     }
                 }
 
-                //页面切换事件的监听
                 if (null != onPagerChange) {
                     onPagerChange.onPagerChange(newPosition);
                 }
@@ -222,8 +227,6 @@ public class BannerView extends RelativeLayout implements View.OnClickListener {
 
             }
         });
-
-        viewPager.setOnClickListener(this);
     }
 
 
@@ -244,14 +247,6 @@ public class BannerView extends RelativeLayout implements View.OnClickListener {
         }
 
 
-    }
-
-    @Override
-    public void onClick(View v) {
-        Log.e(TAG, "onClick: " );
-        if (mOnClickListener != null) {
-            mOnClickListener.onClick(mPosition);
-        }
     }
 
 
@@ -371,13 +366,13 @@ public class BannerView extends RelativeLayout implements View.OnClickListener {
 
 
     //点击事件.
-    private BannerOnclickListener mOnClickListener;
+    private BannerListener mOnClickListener;
 
-    public interface BannerOnclickListener {
+    public interface BannerListener {
         void onClick(int position);
     }
 
-    public void setBannerOnclickListener(BannerOnclickListener mOnClickListener) {
+    public void setBannerOnclickListener(BannerListener mOnClickListener) {
         this.mOnClickListener = mOnClickListener;
 
     }

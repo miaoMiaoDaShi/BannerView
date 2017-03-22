@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import com.xxp.bannerdemo.banner.BannerView;
 import com.xxp.bannerdemo.banner.IBannerPrepare;
@@ -36,13 +35,15 @@ public class MainActivity extends AppCompatActivity {
                 views.get(0).setImageResource(R.mipmap.banner_1);
                 views.get(1).setImageResource(R.mipmap.banner_2);
                 views.get(2).setImageResource(R.mipmap.banner_3);
+                views.get(3).setImageResource(R.mipmap.banner_2);
+                views.get(4).setImageResource(R.mipmap.banner_1);
             }
         });
         //设置点击事件
-        bannerView.setBannerOnclickListener(new BannerView.BannerOnclickListener() {
+        bannerView.setBannerOnclickListener(new BannerView.BannerListener() {
             @Override
             public void onClick(int position) {
-                Toast.makeText(MainActivity.this, "点击" + position, Toast.LENGTH_SHORT).show();
+
             }
         });
     }
