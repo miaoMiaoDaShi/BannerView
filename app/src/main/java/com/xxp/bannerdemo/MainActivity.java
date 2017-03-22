@@ -39,7 +39,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         //设置点击事件
-        bannerView.setBannerOnclickListener(new BannerView.OnClickListener() {
+        bannerView.setBannerOnclickListener(new BannerView.BannerOnclickListener() {
             @Override
             public void onClick(int position) {
                 Toast.makeText(MainActivity.this, "点击" + position, Toast.LENGTH_SHORT).show();

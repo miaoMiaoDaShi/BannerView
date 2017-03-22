@@ -3,15 +3,14 @@ package com.xxp.bannerdemo.banner;
 import android.support.v4.view.PagerAdapter;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 
 import java.util.List;
 
 //轮播图的适配器类
     public class BannerAdapter extends PagerAdapter {
-        List<ImageView> viewList;
+        List<View> viewList;
 
-        public BannerAdapter(List<ImageView> viewList) {
+        public BannerAdapter(List<View> viewList) {
             this.viewList = viewList;
         }
 

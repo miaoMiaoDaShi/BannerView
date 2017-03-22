@@ -31,10 +31,10 @@ import java.util.TimerTask;
  * Created by 钟大爷 on 2017/2/23.
  */
 
-public class BannerView extends RelativeLayout {
+public class BannerView extends RelativeLayout implements View.OnClickListener {
 
     private final String TAG = "BannerView";
-    private ViewPager viewPager;
+    private BannerViewPager viewPager;
     //轮播图的数量
     private int viewPagerCount ;
     //指示器的小圆点数组
@@ -64,7 +64,7 @@ public class BannerView extends RelativeLayout {
 
     //停止制动滑动
     private boolean stop = false;
-    private List<ImageView> bannerView;
+    private List<View> bannerView;
     private LinearLayout pointGroup;
     private Activity mActivity;
 
@@ -83,6 +83,7 @@ public class BannerView extends RelativeLayout {
             }
         }
     };
+    private int mPosition;
 
     public BannerView(Context context) {
         this(context, null);
@@ -154,8 +155,13 @@ public class BannerView extends RelativeLayout {
             mActivity
                     .getApplication()
                     .registerActivityLifecycleCallbacks(lifecycleCallbacks);
+
+            List<ImageView> images = new ArrayList<>();
             //外传bannerViews
-            mIBannerPrepare.setBannerViews(bannerView);
+            for (View view:bannerView) {
+                images.add((ImageView) view);
+            }
+            mIBannerPrepare.setBannerViews(images);
         }
     }
 
@@ -175,23 +181,14 @@ public class BannerView extends RelativeLayout {
 
     //往里面加图片,并设置事件监听
     private void initViewPager() {
-        viewPager = new ViewPager(getContext());
+        viewPager = new BannerViewPager(getContext());
         bannerView = new ArrayList<>();
         for (int i = 0; i < viewPagerCount; i++) {
             ImageView image = new ImageView(getContext());
             image.setImageResource(loading_image);
             image.setScaleType(ImageView.ScaleType.FIT_XY);
+            image.setClickable(false);
             bannerView.add(image);
-            //设置点击事件监听
-            final int position = i;
-            image.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (mOnClickListener != null) {
-                        mOnClickListener.onClick(position);
-                    }
-                }
-            });
         }
 
         viewPager.setAdapter(new BannerAdapter(bannerView));
@@ -204,6 +201,8 @@ public class BannerView extends RelativeLayout {
             @Override
             public void onPageSelected(int position) {
                 Log.e(TAG, "onPageSelected: ");
+                mPosition = position;
+
                 int newPosition = position % viewPagerCount;
                 for (int i = 0; i < viewPagerCount; i++) {
                     mPointArray[newPosition].setShow(true);
@@ -212,6 +211,7 @@ public class BannerView extends RelativeLayout {
                     }
                 }
 
+                //页面切换事件的监听
                 if (null != onPagerChange) {
                     onPagerChange.onPagerChange(newPosition);
                 }
@@ -222,6 +222,8 @@ public class BannerView extends RelativeLayout {
 
             }
         });
+
+        viewPager.setOnClickListener(this);
     }
 
 
@@ -242,6 +244,14 @@ public class BannerView extends RelativeLayout {
         }
 
 
+    }
+
+    @Override
+    public void onClick(View v) {
+        Log.e(TAG, "onClick: " );
+        if (mOnClickListener != null) {
+            mOnClickListener.onClick(mPosition);
+        }
     }
 
 
@@ -361,13 +371,13 @@ public class BannerView extends RelativeLayout {
 
 
     //点击事件.
-    private OnClickListener mOnClickListener;
+    private BannerOnclickListener mOnClickListener;
 
-    public interface OnClickListener {
+    public interface BannerOnclickListener {
         void onClick(int position);
     }
 
-    public void setBannerOnclickListener(OnClickListener mOnClickListener) {
+    public void setBannerOnclickListener(BannerOnclickListener mOnClickListener) {
         this.mOnClickListener = mOnClickListener;
 
     }
